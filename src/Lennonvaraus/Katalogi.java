@@ -1,29 +1,25 @@
 package Lennonvaraus;
 
-import java.util.Scanner;
-import java.util.Random;
-
-/**
- * 
- * @author oonal
- *Kooste ongelmista/tehtävistä:
- * - Onko luokkamuuttuja pvm ok?
- * - viim. metodi (tallennus)
- * - Kutsu asikasta???
- * - päivämäärä-metodin if-lause ei toimi
- * 
- * Jos jaksaa/haluaa:
- * - ID
- * - kohteenvalinta-metodista voi luoda lähtöpaikalle ja määränpäälle omat luokat
+/*
+ * Luokassa valitaan lähtöpaikka, määränpää ja haluttu matkustuspäivä
+ * Annetaan lennolle ID
  */
+import java.util.Random;
+import java.util.Scanner;
 
-public class Katalogi {
+
+public class Katalogi{
 	String lk1;
 	String lk2;
 	String lk3;
 	String lk4;
 	String lk5;;
-	String pvm; //Onko pvm ok? Toimiiko näin? ks. alapuolella oleva konstruktori
+	int lpaikka;
+	int mpaikka;
+	String päiväys;
+	private String paikka1;
+	private String paikka2;
+	private String ID;
 	
 	//luodaan uusi olio konstruktorin avulla (1. konstruktori)
 	public Katalogi() {
@@ -32,56 +28,35 @@ public class Katalogi {
 		lk3="Jyväskylä";
 		lk4="Oulu";
 		lk5="Rovaniemi";
-		pvm="";
+		lpaikka=0;
+		mpaikka=0;
+		paikka1="";
+		paikka2="";
+		päiväys="";
+		ID="";
 	}
 	//luodaan konstruktori (saa parametrit), jotta luokka voidaan periä
-	public Katalogi(String lk1, String lk2, String lk3, String lk4, String lk5, String pvm) {
+	public Katalogi(String lk1, String lk2, String lk3, String lk4, String lk5, int lpaikka, int mpaikka, String paikka1, String paikka2, String päiväys, String ID) {
 		this.lk1=lk1;
 		this.lk2=lk2;
 		this.lk3=lk3;
 		this.lk4=lk4;
 		this.lk5=lk5;
-		this.pvm=pvm;
+		this.lpaikka=lpaikka;
+		this.mpaikka=mpaikka;
+		this.paikka1=paikka1;
+		this.paikka2=paikka2;
+		this.päiväys=päiväys;
+		this.ID=ID;
 		
 	}
-/*
- * paikat ja pvm:t muuttujiksi; done
- * ehkä myös ID (samalla tavalla ja jos jaksaa)
- * esim. jos turku (2), tallenna samanlaiseen metodiin, joka viimeisenä asiakas-luokassa
- * (ks. ylempi rivi) metodin perusta luotu
- */
-	private static Scanner sc=new Scanner(System.in);
-	//Onko ok käyttää samaa Scanneria kaikissa kohdissa? Ilmeisesti.
 
-	/**
-	 * @author oonal
-	 * @param args
-	 * @throws KohdePoikkeus
-	 *Kutsu Asiakasta
-	 *Toimii muuten paitsi Pvm-metodin if-lause ja viim. metodi (koska ei valmis)
-	 *(Ainakin pitäisi xd)
-	 *
-	 *Lisäsin konstrukstorit ja korjasin mahd. jtn virheitä
-	 */
-	
-	public static void main(String[] args) throws KohdePoikkeus {
-		Katalogi k = new Katalogi();
-		//luodaan katalogi-olio ja viitataan sillä muihin metodeihin main-metodista
-		System.out.println("Valitse lähtöpaikka:");
-		k.Kohteenvalinta();
-		k.Päivämäärä();
-		k.Paikat();
-		k.premiumAsiakkuus();
-		k.annaLentokentätjaPvm();
-	}
+	private  Scanner sc=new Scanner(System.in);
 
-	/*
-	 *Lähtöpaikalle ja määränpäälle vois olla omat metodit,
-	 * jotta lähtöpaikkaa ei tarvitse valita uudestaan tulosteessa
-	 */
 		public void Kohteenvalinta() throws KohdePoikkeus{
 			
 		try {
+			System.out.println("Valitse lähtöpaikka:");
 			System.out.println("1. Helsinki-Vantaa");
 			System.out.println("2. Turku");
 			System.out.println("3. Jyväskylä");
@@ -103,44 +78,121 @@ public class Katalogi {
 			if (lp<1 || lp>5 || mp>5 || mp<1) {
 				throw new KohdePoikkeus();
 			}
+			lpaikka=lp;
+			mpaikka=mp;
 		}
 		
 		catch(KohdePoikkeus kp) {
 			System.out.println("Valitse mahdollinen kohde!");
 			Kohteenvalinta();
 		}
-		//Muista tallentaa valinnat jonnekin myöhempää käyttöä varten!
 		}
 
 		public void Päivämäärä(){
+			System.out.println("Lentoja voi tällä hetkellä varata vain vuosille 2019 ja 2020.");
 			System.out.println("Anna päivämäärä (muodossa PPKKVVVV):");
-			String pvm=sc.next();
+			päiväys=sc.next();
 			 
-			
-			//Tallenna tämäkin syöte2
-			 
-			if (tarkastaaPvm(pvm)==false) {
+			String s=päiväys.substring(4, 8);
+			String s2=päiväys.substring(2, 4);
+			String s3=päiväys.substring(0, 2);
+			boolean x=false;
+			if (päiväys.length()==8) {
+				if(s.equals("2019")==true) {
+					x=true;
+				}else {
+					if (s.equals("2020")==true) {
+						x=true;
+					}else {
+						System.out.println("Virheellinen päivämäärä!");
+						Päivämäärä();
+					}
+				}
+
+				if(s2.equals("01") || s2.equals("03") || s2.equals("05") || s2.equals("07") || s2.equals("08") || s2.equals("10") || s2.equals("12")) {
+					if (Integer.parseInt(s3)>0 && Integer.parseInt(s3)<32){
+						x=true;
+					}else {
+						System.out.println("Virheellinen päivämäärä!");
+						Päivämäärä();
+					}
+				}else {
+					if(s2.equals("04") || s2.equals("06") || s2.equals("09") || s2.equals("11")) {
+						if (Integer.parseInt(s3)>0 && Integer.parseInt(s3)<31){
+							x=true;
+						}else {
+							System.out.println("Virheellinen päivämäärä!");
+							Päivämäärä();
+						}
+					}else {
+						if(s.equals("02")) {
+							if (Integer.parseInt(s3)>0 && Integer.parseInt(s3)<29){
+								x=true;
+							}else {
+								System.out.println("Virheellinen päivämäärä!");
+								Päivämäärä();
+							}
+						}
+					}
+				}
+			}else {
 				System.out.println("Virheellinen päivämäärä!");
 				Päivämäärä();
 			}
 		}
+
 		public void Paikat() {
 			Random rnd=new Random();
 			int kaikkiPaikat=rnd.nextInt(201);
 			System.out.println("Paikkoja vapaana:" + kaikkiPaikat);
 			System.out.println("Paikka varattu. Syötä tietosi.");
 		}
-		public void premiumAsiakkuus() {
-			System.out.println("Oletko Premium-asiakas?");
-			System.out.println("Vastaa 1, jos olet Premium-asiakas.	Vastaa 2, jos et ole.");
-			sc.nextInt();
+		
+		public void LentokentätjaPvm() {
+			
+			String loppu="";
+			String alku="FA";
+			
+			if (lpaikka==1) {
+				paikka1=lk1;
+			}
+			if (lpaikka==2) {
+				paikka1=lk2;
+			}
+			if (lpaikka==3) {
+				paikka1=lk3;
+			}
+			if (lpaikka==4) {
+				paikka1=lk4;
+			}
+			if (lpaikka==5) {
+				paikka1=lk5;
+			}
+			
+			if (mpaikka==1) {
+				paikka2=lk1;
+			}
+			if(mpaikka==2) {
+				paikka2=lk2;
+			}
+			if(mpaikka==3) {
+				paikka2=lk3;
+			}
+			if(mpaikka==4) {
+				paikka2=lk4;
+			}
+			if(mpaikka==5) {
+				paikka2=lk5;
+			}
+			
+			Random ran=new Random();
+			int idNum=ran.nextInt((10000-3000)+1)+3000;
+			loppu=String.valueOf(idNum);
+			ID=alku+loppu;
+			
 		}
-		public String annaLentokentätjaPvm() {
-			/*
-			 * palauta tiedot pilkulla erotettuina
-			 * scanner file nextline???
-			 * lentotiedot!!!
-			 */
+		public String toString() {
+			return paikka1+","+paikka2+","+päiväys+","+ID;
 		}
 		
 }

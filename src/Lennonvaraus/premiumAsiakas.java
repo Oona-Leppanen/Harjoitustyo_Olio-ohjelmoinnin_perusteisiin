@@ -1,13 +1,20 @@
 package Lennonvaraus;
 
-/**
- * @author oonal
- *korjasin konstruktorin pienet vierheet -> toimii nyt
+/*
+ * Asiakkaan perivä luokka, jolla on alennettu hinta
  */
-public class premiumAsiakas extends Asiakas {
-	double phinta;
-	public premiumAsiakas(String nimi, String hetu, String sposti, String puh, double hinta, double phinta) {
-		super(nimi, hetu, sposti, puh, hinta);
-		this.phinta=80.0;
+public class premiumAsiakas extends Asiakas{
+	
+	public premiumAsiakas() {
+		super();
+		this.hinta=80.0;
+	}
+	
+	public premiumAsiakas(String etunimi, String sukunimi, String hetu, String sposti, String puh) {
+		super(etunimi, sukunimi, hetu, sposti, puh);
+		this.hinta=80.0;
+	}
+	public void pHinta() {
+		System.out.println("Lipun hinta on " + hinta + "€.");
 	}
 }

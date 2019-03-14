@@ -1,29 +1,36 @@
 package Lennonvaraus;
 
-/**
- * 
- * @author oonal
- *ongelma metodissa "puhelinnumero" korjattu
- *nyt pitäisi toimia
+/*
+ * Käsitellään vääränlaiset asiakkaan antamat tiedot
  */
+
 public class henkilötietojenTarkastus extends Asiakas{
-	public henkilötietojenTarkastus(String nimi, String hetu, String sposti, String puh, double hinta) {
-		super(nimi, hetu, sposti, puh, hinta);
+	String s;
+	public henkilötietojenTarkastus() {
+		s="";
 	}
-	
+	public henkilötietojenTarkastus(String etunimi, String sukunimi, String hetu, String sposti, String puh, double hinta, String s) {
+		super(etunimi, sukunimi, hetu, sposti, puh, hinta);
+		this.s=s;
+	}
+
 	public boolean henkilötunnus(String h) {
-		String s="";
-		s=h.substring(0, 6);
-		if(s.length()==10 && (s.contains("-")==true || s.contains("A")==true)) {
+		if (h==null || h.length()<1) {
+			return false;
+		}
+		s=h.substring(0, 11);
+		if(s.length()==11 && (s.contains("-")==true || s.contains("A")==true)) {
 			return true;
 		}
 		else {
 			return false;
 		}
 	}
-	//hetu: syntaika + -/A + 3*num + num/kirj.
 	
 	public boolean sähköpostiosoite(String s) {
+		if (s==null || s.length()<1) {
+			return false;
+		}
 		if(s.contains("@")==true && s.length()>=5 && s.contains(".")==true) {
 			return true;
 		}
@@ -32,15 +39,18 @@ public class henkilötietojenTarkastus extends Asiakas{
 		}
 		
 	}
-	
+
 	public boolean puhelinnumero(String p) {
 		boolean x=false;
+		if (p==null || p.length()<1) {
+			x=false;
+		}
 		for (int i=0; i<p.length(); i++) {
-			for (int j=0; j<10; i++) {
-				if(p.charAt(i)==j) {
+				if(p.charAt(i)=='1' || p.charAt(i)=='2' || p.charAt(i)=='3' || p.charAt(i)=='4' || p.charAt(i)=='5' || p.charAt(i)=='6' || p.charAt(i)=='7' || p.charAt(i)=='8' || p.charAt(i)=='9') {
 					x=true;
+				}else {
+					x=false;
 				}
-			}
 		}
 			return x;
 	}

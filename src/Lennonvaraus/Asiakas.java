@@ -2,80 +2,104 @@ package Lennonvaraus;
 
 import java.util.Scanner;
 
-/**
- * 
- * @author oonal
- * Kooste ongelmista/tehtävistä:
- * - tiedot-metodi (korjattu!)
- * - käsittele falset
- * - annaTiedot-metodi kesken
- * - lento-luokka ja sinne lento-olio, joka saa anna*-metodeihin (katalogi, asiakas) tallennetut olioiden arvot?
- * 
- *Olio-ongelmista päästy eroon kiitos viim. tutoriaalin
+/*
+ * Luodaan asiakas-luokka, jossa kerätään asiakkaan tiedot ja kerrotaan hinta asiakkaalle
+ * Vääränlaiset tiedot heittävät poikkeuksen
+ * Tallennetaan asiakkaan tiedot toStringiin
  */
-public class Asiakas {
+public class Asiakas{
 	private static Scanner sc=new Scanner(System.in);
-	String nimi;
+	String etunimi;
+	String sukunimi;
 	String hetu;
 	String sposti;
 	String puh;
-	double hinta=100.0;
+	double hinta;
 	
 	//luodaan uusi olio konstruktorin avulla (1. konstruktori)
 	public Asiakas() {
-		nimi="";
+		etunimi="";
+		sukunimi="";
 		hetu="";
 		sposti="";
 		puh="";
 		hinta=100.0;
 	}
 	//luodaan konstruktori (saa parametrit), jotta luokka voidaan periä
-	public Asiakas(String nimi, String hetu, String sposti, String puh, double hinta) {
-		this.nimi=nimi;
+	public Asiakas(String etunimi, String sukunimi, String hetu, String sposti, String puh) {
+		this.etunimi=etunimi;
+		this.sukunimi=sukunimi;
 		this.hetu=hetu;
 		this.sposti=sposti;
 		this.puh=puh;
 		this.hinta=100.0;
 	}
-	/*
-	 * main-metodeita vain yksi; done
-	 * Jotta voisi kirjoittaa esim. "((henkilötietojenTarkastus)hetu).henkilötunnus(h);",
-	 * "hetun" tulisi olla olio
-	 */
+
 	
-	public void tiedot() {
-		Asiakas a=new Asiakas();
-		System.out.println("Anna nimesi:");
-		sc.nextLine();
+	public void alkuTiedot(){
+		System.out.println("Oletko Premium-asiakas?");
+		System.out.println("Vastaa 1, jos olet Premium-asiakas.	Vastaa 2, jos et ole.");
+		int pas=sc.nextInt();
+		if (pas==1) {
+			premiumAsiakas pa=new premiumAsiakas();
+			((premiumAsiakas)pa).pHinta();
+		}
+		if (pas==2) {
+			Hinta();
+		}
+	}
+	/*
+	 * ei toimi premiumasiakkaalla
+	 * toimii normiasiakkaalla
+	 */
+	public void tiedot() throws asiakasPoikkeus {
+		Asiakas b=new henkilötietojenTarkastus();
+		
+		try {
+		System.out.println("Anna etunimesi:");
+		etunimi = sc.next();
+		System.out.println("Anna sukunimesi:");
+		sukunimi=sc.next();
 		System.out.println("Anna henkilötunnuksesi:");
-		String h = sc.nextLine();
-		((henkilötietojenTarkastus)a).henkilötunnus(h);
+		hetu = sc.next();
+		if (((henkilötietojenTarkastus)b).henkilötunnus(hetu)==false) {
+			throw new asiakasPoikkeus();
+		}
+		
 		System.out.println("Anna sähköpostiosoitteesi:");
-		String s = sc.nextLine();
-		((henkilötietojenTarkastus)a).sähköpostiosoite(s);
-		System.out.println("Anna puhelinumerosi:");
-		String p = sc.nextLine();
-		//voi tarvita instanceofia! ks. tutoriaalit
-		((henkilötietojenTarkastus)a).puhelinnumero(p);
+		sposti = sc.next();
+		if (((henkilötietojenTarkastus)b).sähköpostiosoite(sposti)==false) {
+			throw new asiakasPoikkeus();
+		}
+		System.out.println("Anna puhelinnumerosi (ilman maakoodia):");
+		puh = sc.next();
+		if (((henkilötietojenTarkastus)b).puhelinnumero(puh)==false) {
+			throw new asiakasPoikkeus();
+		}
+		
 		//luottokorttin pätevyys kuuluu tunnistautumispalveluille, ei meille
 		System.out.println("Tiedot tallennettu onnistuneesti.");
 		System.out.println("Vahvistetaan varaus.");
-		System.out.println("Varaus suoritettu onnistuneesti.");
+		}
+		catch(asiakasPoikkeus ap){
+			System.out.println("Viimeinen antamistasi tiedoista on virheellinen. Anna tiedot uudestaan.");
+			tiedot();
+		}
 	}
-	/*käsittele falset
-	 * lentoasiakas
-	 * lennon ID
-	 * 1. tulosta asiakkaalle "kaikki ok"; done
-	 * 3. -||- varaus vahvistettu; done
-	 * 2. -||- siirretään varaukseen; done
-	 */
+	public void Hinta() {
+		hinta=100.0;
+		System.out.println("Lipun hinta on " + hinta + "€.");
+
+	}
 	
-	public String annaTiedot() {
-		/*
-		 * palauta tiedot pilkulla erotettuina
-		 * scanner file nextline???
-		 * lentotiedot!!!
-		 * sama myös katalogiin
-		 */
+	/*public void pHinta() {
+		*hinta=80.0;
+		*System.out.println("Lipun hinta on " + hinta + "€.");
+	}*/
+	
+
+	public String toString() {
+		return etunimi+","+sukunimi+","+hetu+","+sposti+","+puh;
+
 	}
 }
